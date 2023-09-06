@@ -1,4 +1,4 @@
-export interface SearchedSickResponse {
+export interface SickData {
   sickCd: string;
   sickNm: string;
 }

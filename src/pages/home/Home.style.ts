@@ -74,7 +74,7 @@ export const SearchingButton = styled(BiSearch)`
   }
 `;
 
-export const SuggestionList = styled.div`
+export const RecommendList = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -84,7 +84,7 @@ export const SuggestionList = styled.div`
   border-radius: 10px;
   gap: 10px;
 `;
-export const SuggestedData = styled.div`
+export const RecommendedData = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
