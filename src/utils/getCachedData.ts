@@ -6,8 +6,9 @@ const getCachedData = async (url: string) => {
   const cachedResponse = await cacheStorage.match(url);
 
   if (cachedResponse) {
-    if (!isCachedDataExpired(cachedResponse)) {
-      return cachedResponse;
+    if (!(await isCachedDataExpired(cachedResponse))) {
+      const data = await cachedResponse.json();
+      return data;
     }
     await cacheStorage.delete(url);
     return;

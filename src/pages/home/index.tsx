@@ -16,10 +16,11 @@ const Home = () => {
 
   const getRecommendList = useCallback(async () => {
     try {
-      const responsedCache = await getCachedData(`/sick?q=${debouncedKeyword.trim()}`);
+      const cachedData = await getCachedData(`/sick?q=${debouncedKeyword.trim()}`);
 
-      if (responsedCache) {
-        return; //여기
+      if (cachedData) {
+        setRecommendList(cachedData);
+        return;
       }
 
       const { data } = await instance.get(`/sick?q=${debouncedKeyword.trim()}`);
