@@ -1,1 +1,1 @@
-export const DELAY_NUMBER = 500;
+export const DEBOUNCE_DELAY_MILLISECONDS = 500;
