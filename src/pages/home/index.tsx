@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import axios from 'axios';
 
 import useDebounce from '../../hooks/useDebounce';
@@ -7,10 +7,16 @@ import { instance } from '../../apis/axios';
 import * as S from './Home.style';
 import getCachedData from '../../utils/getCachedData';
 import setCacheData from '../../utils/setCacheData';
+import { ARROW_DOWN_CODE, ARROW_UP_CODE, TAB_CODE } from '../../constants';
 
 const Home = () => {
   const [keyword, setKeyword] = useState('');
   const [recommendList, setRecommendList] = useState<SickData[]>([]);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const recommendedRef = useRef<(HTMLDivElement | null)[]>([]);
+  const recommendedRefList = {
+    current: recommendedRef.current?.filter(element => element !== null),
+  };
 
   const debouncedKeyword = useDebounce(keyword, 250);
 
@@ -41,6 +47,33 @@ const Home = () => {
     }
   }, [debouncedKeyword]);
 
+  const handleRecommendedListKeyDown = (event: React.KeyboardEvent, index: number) => {
+    if (event.code === TAB_CODE || event.code === ARROW_DOWN_CODE) {
+      event.preventDefault();
+      recommendedRefList.current[index + 1]?.focus();
+    }
+    if (event.code === ARROW_UP_CODE) {
+      if (index === 0) {
+        inputRef.current?.focus();
+      }
+      recommendedRefList.current[index - 1]?.focus();
+    }
+  };
+
+  const handleInputKeyDown = (event: React.KeyboardEvent) => {
+    if (
+      (event.code === TAB_CODE && event.nativeEvent.isComposing === false) ||
+      (event.code === ARROW_DOWN_CODE && event.nativeEvent.isComposing === false)
+    ) {
+      event.preventDefault();
+      recommendedRefList.current[0]?.focus();
+    }
+  };
+
+  const handleInputClear = () => {
+    setKeyword('');
+  };
+
   return (
     <S.Container>
       <S.Title>
@@ -50,16 +83,39 @@ const Home = () => {
         <S.Input
           type="text"
           value={keyword}
+          ref={inputRef}
           onChange={e => setKeyword(e.target.value)}
+          onKeyDown={handleInputKeyDown}
           placeholder="질환명을 입력해 주세요."
         />
-        <S.ClearButton>X</S.ClearButton>
-        <S.SearchingButton />
+        <S.SearchButtonWrapper>
+          {debouncedKeyword && recommendList && (
+            <S.ClearButton onClick={handleInputClear}>X</S.ClearButton>
+          )}
+          <S.SearchingButton />
+        </S.SearchButtonWrapper>
       </S.SearchWrapper>
-
-      <S.RecommendList>
-        <S.SubTitle>추천 검색어</S.SubTitle>
-      </S.RecommendList>
+      {debouncedKeyword && recommendList && (
+        <S.RecommendList>
+          <S.SubTitle>추천 검색어</S.SubTitle>
+          {recommendList.length === 0 && <S.RecommendedData>검색어 없음</S.RecommendedData>}
+          <S.RecommendWrapper>
+            {recommendList.map((data, index) => (
+              <S.RecommendedData
+                key={data.sickCd}
+                ref={element => {
+                  recommendedRefList.current[index] = element;
+                }}
+                tabIndex={index}
+                onKeyDown={event => handleRecommendedListKeyDown(event, index)}
+              >
+                <S.RecommendListIcon />
+                <S.RecommendedListText>{data.sickNm}</S.RecommendedListText>
+              </S.RecommendedData>
+            ))}
+          </S.RecommendWrapper>
+        </S.RecommendList>
+      )}
     </S.Container>
   );
 };

@@ -4,16 +4,17 @@ import { BiSearch } from 'react-icons/bi';
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: flex-start;
   align-items: center;
   width: 100%;
   height: 100vh;
   background-color: #cae9ff;
+  position: relative;
 `;
 
 export const Title = styled.h1`
-  margin-top: 30px;
-  font-size: 30px;
+  margin: 30px 0px;
+  font-size: 25px;
   text-align: center;
   font-weight: bold;
 `;
@@ -30,8 +31,7 @@ export const SearchWrapper = styled.div`
 
 export const Input = styled.input`
   width: auto;
-  padding: 10px 0;
-  margin: 10px 30px;
+  margin: 0px 20px;
   border: none;
   font-size: 18px;
   font-weight: 600;
@@ -49,18 +49,24 @@ export const Input = styled.input`
     }
   }
 `;
+export const SearchButtonWrapper = styled.div`
+  display: flex;
+  align-items: center;
+`;
 
 export const ClearButton = styled.button`
-  width: 60px;
-  height: 45px;
-  color: gray;
+  width: 30px;
+  height: 30px;
+  font-size: 15px;
+  color: white;
+  background-color: #80808087;
   border: none;
   border-radius: 50px;
   cursor: pointer;
 `;
 export const SearchingButton = styled(BiSearch)`
-  width: 60px;
-  height: 60px;
+  width: 40px;
+  height: 40px;
   padding: 10px;
   margin: 10px;
   background-color: rgb(52, 121, 225);
@@ -69,20 +75,40 @@ export const SearchingButton = styled(BiSearch)`
   margin-right: 10px;
   border-radius: 50px;
   cursor: pointer;
-  svg {
-    fill: white;
-  }
+`;
+
+export const RecommendWrapper = styled.div`
+  width: 100%;
+  max-height: 300px;
+  overflow-y: auto;
+  padding-right: 8px;
 `;
 
 export const RecommendList = styled.div`
-  width: 100%;
+  width: 500px;
   display: flex;
   flex-direction: column;
   justify-content: start;
   margin-top: 20px;
-  background-color: rgb(208, 232, 253);
+  background-color: white;
   border-radius: 10px;
-  gap: 10px;
+`;
+
+export const RecommendListIcon = styled(BiSearch)`
+  width: 15px;
+  height: 15px;
+  border: none;
+  cursor: pointer;
+  color: gray;
+  flex-shrink: 0;
+`;
+
+export const RecommendedListText = styled.p`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
 `;
 export const RecommendedData = styled.div`
   display: flex;
@@ -91,13 +117,15 @@ export const RecommendedData = styled.div`
   margin: 0 20px;
   padding: 10px;
   border-radius: 30px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
   &:last-of-type {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
   }
   &:first-of-type {
-    margin-top: 20px;
+    margin-top: 10px;
   }
-  font-weight: 500;
 
   &:focus {
     outline: none;
