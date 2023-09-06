@@ -1,19 +1,17 @@
+import isCachedDataExpired from './isCachedDataExpired';
 import { CACHE_NAME } from '../constants';
 
 const getCachedData = async (url: string) => {
-  try {
-    const cacheStorage = await caches.open(CACHE_NAME);
-    const cachedResponse = await cacheStorage.match(url);
+  const cacheStorage = await caches.open(CACHE_NAME);
+  const cachedResponse = await cacheStorage.match(url);
 
-    if (!cachedResponse || !cachedResponse.ok) {
-      return false;
+  if (cachedResponse) {
+    if (!isCachedDataExpired(cachedResponse)) {
+      return cachedResponse;
     }
-
-    return await cachedResponse.json();
-  } catch (error) {
-    console.error('Error while getting data from cache:', error);
-    return false;
+    await cacheStorage.delete(url);
+    return;
   }
+  return;
 };
-
 export default getCachedData;

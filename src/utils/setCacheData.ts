@@ -1,17 +1,22 @@
-import { AxiosResponse } from 'axios';
-import { CACHE_NAME } from '../constants';
+import { CACHE_NAME, CUSTOM_HEADER_FETCH_DATE } from '../constants';
+import { SickData } from '../types';
 
-const setCacheData = async (url: string, response: AxiosResponse) => {
+const setCacheData = async (url: string, data: SickData[]) => {
   const cacheStorage = await caches.open(CACHE_NAME);
-  const init: ResponseInit = {
-    headers: {
-      'Content-Type': 'application/json; charset=utf-8',
-      'content-length': '2',
-    },
-  };
-  const clonedResponse = new Response(JSON.stringify(response), init);
-  console.log('여기');
-  await cacheStorage.put(url, clonedResponse);
-};
+  const response = new Response(JSON.stringify(data));
 
+  const clonedResponse = response.clone();
+  const newBody = await clonedResponse.blob();
+  const newHeaders = new Headers(clonedResponse.headers);
+  console.log(newBody + ' ' + newHeaders);
+  newHeaders.append(CUSTOM_HEADER_FETCH_DATE, new Date().toISOString());
+
+  const newResponse = new Response(newBody, {
+    status: clonedResponse.status,
+    statusText: clonedResponse.statusText,
+    headers: newHeaders,
+  });
+
+  cacheStorage.put(url, newResponse);
+};
 export default setCacheData;
