@@ -1,38 +1,27 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import axios from 'axios';
 
-import useDebounce from '../../hooks/useDebounce';
+import { useDebounce } from '../../hooks';
 import { SickData } from '../../types';
-import { instance } from '../../apis/axios';
-import * as S from './Home.style';
-import getCachedData from '../../utils/getCachedData';
-import setCacheData from '../../utils/setCacheData';
 import { ARROW_DOWN_CODE, ARROW_UP_CODE, TAB_CODE } from '../../constants';
+import { getDataList } from '../../apis';
+
+import * as S from './Home.style';
 
 const Home = () => {
   const [keyword, setKeyword] = useState('');
   const [recommendList, setRecommendList] = useState<SickData[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
-  const recommendedRef = useRef<(HTMLDivElement | null)[]>([]);
-  const recommendedRefList = {
-    current: recommendedRef.current?.filter(element => element !== null),
-  };
+  const recommendedRef = useRef<HTMLDivElement[]>([]);
 
   const debouncedKeyword = useDebounce(keyword, 250);
 
+  const isEmpty = recommendList.length === 0;
+  const isVisible = debouncedKeyword && !isEmpty;
+
   const getRecommendList = useCallback(async () => {
     try {
-      const cachedData = await getCachedData(`/sick?q=${debouncedKeyword.trim()}`);
-
-      if (cachedData) {
-        setRecommendList(cachedData);
-        return;
-      }
-
-      const { data } = await instance.get(`/sick?q=${debouncedKeyword.trim()}`);
-
-      console.info('calling api');
-      await setCacheData(`/sick?q=${debouncedKeyword.trim()}`, data);
+      const data = await getDataList(debouncedKeyword);
       setRecommendList(data);
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -50,13 +39,13 @@ const Home = () => {
   const handleRecommendedListKeyDown = (event: React.KeyboardEvent, index: number) => {
     if (event.code === TAB_CODE || event.code === ARROW_DOWN_CODE) {
       event.preventDefault();
-      recommendedRefList.current[index + 1]?.focus();
+      recommendedRef.current[index + 1]?.focus();
     }
     if (event.code === ARROW_UP_CODE) {
       if (index === 0) {
         inputRef.current?.focus();
       }
-      recommendedRefList.current[index - 1]?.focus();
+      recommendedRef.current[index - 1]?.focus();
     }
   };
 
@@ -66,14 +55,19 @@ const Home = () => {
       (event.code === ARROW_DOWN_CODE && event.nativeEvent.isComposing === false)
     ) {
       event.preventDefault();
-      recommendedRefList.current[0]?.focus();
+      recommendedRef.current[0]?.focus();
     }
   };
 
   const handleInputClear = () => {
     setKeyword('');
   };
-
+  const setRecommendListRef = (element: HTMLDivElement | null, index: number) => {
+    if (!element) {
+      return;
+    }
+    recommendedRef.current[index] = element;
+  };
   return (
     <S.Container>
       <S.Title>
@@ -89,23 +83,19 @@ const Home = () => {
           placeholder="질환명을 입력해 주세요."
         />
         <S.SearchButtonWrapper>
-          {debouncedKeyword && recommendList && (
-            <S.ClearButton onClick={handleInputClear}>X</S.ClearButton>
-          )}
+          {isVisible && <S.ClearButton onClick={handleInputClear}>X</S.ClearButton>}
           <S.SearchingButton />
         </S.SearchButtonWrapper>
       </S.SearchWrapper>
-      {debouncedKeyword && recommendList && (
+      {isVisible && (
         <S.RecommendList>
           <S.SubTitle>추천 검색어</S.SubTitle>
-          {recommendList.length === 0 && <S.RecommendedData>검색어 없음</S.RecommendedData>}
+          {isEmpty && <S.RecommendedData>검색어 없음</S.RecommendedData>}
           <S.RecommendWrapper>
             {recommendList.map((data, index) => (
               <S.RecommendedData
                 key={data.sickCd}
-                ref={element => {
-                  recommendedRefList.current[index] = element;
-                }}
+                ref={element => setRecommendListRef(element, index)}
                 tabIndex={index}
                 onKeyDown={event => handleRecommendedListKeyDown(event, index)}
               >

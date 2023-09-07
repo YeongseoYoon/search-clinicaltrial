@@ -8,7 +8,7 @@ const setCacheData = async (url: string, data: SickData[]) => {
   const clonedResponse = response.clone();
   const newBody = await clonedResponse.blob();
   const newHeaders = new Headers(clonedResponse.headers);
-  console.log(newBody + ' ' + newHeaders);
+
   newHeaders.append(CUSTOM_HEADER_FETCH_DATE, new Date().toISOString());
 
   const newResponse = new Response(newBody, {
