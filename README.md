@@ -104,7 +104,7 @@ useEffect(() => {
 ### Assignment 4. 키보드만으로 추천 검색어 이동 기능 구현
 
 - div element로 각 추천 검색어들을 불러온 뒤, 각각을 useRef()로 배열에 저장하고, 키보드 상하키와 탭키를 눌렀을경우에 배열의 index를 증가 혹은 감소 시켜 focus() 되도록했습니다.
-- event.preventDefault()로, 두 번 이동되는 것 막음.
+- event.preventDefault()로, 이벤트가 두 번 발생해 이동되는 것을 막았습니다.
 - input에서 바라탄언어(한국어 포함)의 입력인지 아닌지를 구별 위해 event.nativeEvent.isComposing === false 처리했습니다.
 
 ```JS
