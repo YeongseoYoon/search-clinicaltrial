@@ -8,6 +8,8 @@
 
 <img src="https://github.com/wanted-internship-12-9/pre-onboarding-12th-3-9/assets/86523545/e426d34c-c2c6-4f84-a4d0-e51a541ca0c1">
 
+[배포 링크](https://search-clinicaltrial.vercel.app/)
+
 ## 개발 환경
 
 ### Developement
