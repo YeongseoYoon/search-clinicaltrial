@@ -1,21 +1,21 @@
 # Search-Clinicaltrial
 
-## 프로젝트 소개
+## ❤️ 프로젝트 내용
 
 - 질환명 검색 시 입력한 단어를 기반으로 검색어를 추천해주는 프로젝트입니다.
 
-## 데모 영상
+## 🌱 배포 및 제작 기간
 
-[배포 링크](https://search-clinicaltrial.vercel.app/)
+- 배포 링크 : [Search-Clinicaltrial](https://search-clinicaltrial.vercel.app/)
+- 제작 기간 : 2023.09.05 ~ 2023.09.06 (2일)
 
-<img src="https://github.com/wanted-internship-12-9/pre-onboarding-12th-3-9/assets/86523545/e426d34c-c2c6-4f84-a4d0-e51a541ca0c1">
+<img src="https://github.com/wanted-internship-12-9/pre-onboarding-12th-3-9/assets/86523545/e426d34c-c2c6-4f84-a4d0-e51a541ca0c1"/>
 
 ## 개발 환경
 
-### Developement
+### Development
 
-<img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=React&logoColor=white"/> <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=TypeScript&logoColor=white"/>
-<img src="https://img.shields.io/badge/Axios-5A29E4?style=for-the-badge&logo=Axios&logoColor=white"/>
+<img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=React&logoColor=white"/> <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=TypeScript&logoColor=white"/> <img src="https://img.shields.io/badge/Axios-5A29E4?style=for-the-badge&logo=Axios&logoColor=white"/>
 
 ### Styling
 
@@ -23,7 +23,15 @@
 
 ### Convention
 
-<img src="https://img.shields.io/badge/husky-brown?style=for-the-badge&logo=npm"> <img src="https://img.shields.io/badge/lint staged-white?style=for-the-badge&logo=npm"> <img src="https://img.shields.io/badge/ESLint-4B32C3?style=for-the-badge&logo=eslint"> <img src="https://img.shields.io/badge/Prettier-F7B93E?style=for-the-badge&logo=prettier&logoColor=white">
+<img src="https://img.shields.io/badge/husky-brown?style=for-the-badge&logo=npm"/> <img src="https://img.shields.io/badge/lint staged-white?style=for-the-badge&logo=npm"/> <img src="https://img.shields.io/badge/ESLint-4B32C3?style=for-the-badge&logo=eslint"/> <img src="https://img.shields.io/badge/Prettier-F7B93E?style=for-the-badge&logo=prettier&logoColor=white"/>
+
+## 🚀 실행 방법
+
+```
+$ git clone https://github.com/YeongseoYoon/search-clinicaltrial.git
+$ npm install
+$ npm start
+```
 
 ## 디렉토리 구조
 
@@ -65,24 +73,20 @@
 
 ### Assignment 2. API 호출별로 로컬 캐싱 구현 (+expire time)
 
-- **CacheStorage**는 localStorage 및 sessionStorage 에 비해 **용량이 크고 비동기**로 처리됩니다.(블로킹이 없음)
+- **CacheStorage**는 localStorage 및 sessionStorage 에 비해 **용량이 크고 비동기**로 처리됩니다. (블로킹이 없음)
   DB 단의 데이터가 자주 변경 되는 경우에 브라우저의 storage를 사용하는 경우 stale한 데이터를 보여줄 수도 있는 위험이 있지만, 데이터의 특성을 고려했을 때 자주 변하지 않는 데이터라고 판단해서 브라우저의 storage를 사용하기로 결정했습니다.
-
 - cache api 및 cacheStorage를 사용하여 util함수로 getCachedData, setCacheData를 구현하였습니다.
-
 - api 최초 호출 시에는 캐시 스토리지에 저장. 저장시 fetch date도 함께 저장하고, 이후의 api 요청시 캐시 스토리지에 값이 있다면 저장된 fetch date와 현재 시각을 비교한뒤 expire date보다 크다면(만료) 새로 api를 호출해 캐시 스토리지에 저장합니다. 그렇지 않다면 캐시 스토리지의 데이터를 그대로 사용토록 했습니다.
 
 ### Assignment 3. 입력 시 API 호출 횟수 최소화 전략
 
-> ### 🚀 debounce 패턴을 적용한 커스텀 훅이 어디까지 처리해줘야 하는가?<br>
+> ### 🚀 debounce 패턴을 적용한 커스텀 훅이 어디까지 처리해줘야 하는가?
 >
 > 커스텀 훅이 **사용자의 검색 키워드**에 대한 처리만 해줘야 할지, 검색 키워드에 대한 **api 요청과 결과를 함께 처리**해줘야 할지에 대한 고민이 있었습니다.
 
 - debounce 훅의 역할과 책임이 어느정도까지인가에 대한 고민이 있었습니다. debounce 훅 외부에서 api 호출 로직을 주입해 콜백할지, 아니면 입력되는 키워드에 대해서만 debounce를 적용시킬지에 대해 고민했습니다.
-
 - `useDebounce훅의 관심사는 디바운싱이다!` 라는 결론을 내리고, 입력된 키워드에 debounce 처리를 한 후, debounce 된 키워드가 변할때마다 useEffect 훅을 사용해 api를 호출하도록 했습니다.
-
-- debouncedKeyword를 통해 debouncedKeyword를 trim()해 공백 제거 후 api 요청
+- debouncedKeyword를 통해 debouncedKeyword를 trim()해 공백 제거를 해 단어의 앞 뒤로 공백이 입력될 경우를 방지했습니다.
 
 ```js
 const getRecommendList = useCallback(async () => {
